@@ -5,7 +5,8 @@ import { config } from './config/data-source';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { BlogsModule } from './blogs/blogs.module';
-
+import { CommentsModule } from './comments/comments.module';
+import { UploadModule } from './upload/upload.module';
 @Module({
   imports: [
     UsersModule,
@@ -13,6 +14,8 @@ import { BlogsModule } from './blogs/blogs.module';
     TypeOrmModule.forRootAsync(config),
     AuthModule,
     BlogsModule,
+    CommentsModule,
+    UploadModule,
   ],
   controllers: [],
   providers: [],

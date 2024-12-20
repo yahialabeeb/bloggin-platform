@@ -8,7 +8,6 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from '../auth/strategies/local.strategy';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtRefreshStrategy } from '../auth/strategies/refresh-jwt.strategy';
-import { UsersService } from 'src/users/users.service';
 
 @Global()
 @Module({

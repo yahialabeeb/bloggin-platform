@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -12,7 +8,6 @@ import {
   AccessTokenPayload,
   AccountWithTokens,
 } from 'src/auth/dto/account-with-tokens.dto';
-import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,13 +19,13 @@ export class AuthService {
 
   async signup(createUserDto: CreateUserDto): Promise<AccountWithTokens> {
     const { name, username, email, password } = createUserDto;
-    console.log(123459);
+
     const user = await this.usersService.findOne(username);
     if (user) throw new BadRequestException('username is exist');
-    console.log(333, user);
+
     const createdUser = await this.usersService.create({
       ...createUserDto,
-      password: hash(password),
+      password: await hash(password, 10),
     });
 
     const payload = {
@@ -41,7 +36,6 @@ export class AuthService {
 
     const { accessToken, refreshToken } =
       await this._generateAuthTokens(payload);
-    console.log(accessToken);
     return {
       name,
       username,
@@ -52,8 +46,12 @@ export class AuthService {
     };
   }
 
-  async login(user: User): Promise<AccountWithTokens> {
-    const { id, email, username, name } = user;
+  async login({ username, password }): Promise<AccountWithTokens> {
+    const user = await this.validateUserCredentials({
+      username,
+      password,
+    });
+    const { id, email, name } = user;
     const payload = { sub: id, username, email };
     const { accessToken, refreshToken } =
       await this._generateAuthTokens(payload);

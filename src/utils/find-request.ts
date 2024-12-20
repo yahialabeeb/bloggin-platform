@@ -8,6 +8,14 @@ import {
   Not,
 } from 'typeorm';
 
+interface IFindRequestObject {
+  query: any;
+  relations: string[];
+  fields: string[];
+  sortQueries: any;
+  limitQueries: any;
+}
+
 const postfixes = [
   {
     name: 'Bigger Than Or Equal',
@@ -40,19 +48,6 @@ const postfixes = [
     operator: ILike,
   },
 ];
-
-const buildSortQuery = (query) => {
-  if (query) {
-    const keys = Object.keys(query).filter((key) => key.endsWith('_sort'));
-
-    return keys?.reduce((final, current) => {
-      const prop = current.replace('_sort', '');
-      return { ...final, [prop]: query[current] };
-    }, {});
-  } else {
-    return {};
-  }
-};
 
 const buildWherePostfixQueries = (query, postfix, operator, equal) => {
   let where = {};
@@ -117,8 +112,21 @@ const buildWhereQuery = (query) => {
   return finalWhere;
 };
 
-export const findRequest = ({ query, relations }) => ({
+export const findRequest = ({
+  query,
   relations,
-  where: buildWhereQuery(query),
-  order: buildSortQuery(query),
-});
+  fields = [],
+}: Partial<IFindRequestObject>) => {
+  const modifiedQuery = buildWhereQuery(query);
+  const validQuery = Object.keys(modifiedQuery)
+    .filter((q) => fields.includes(q))
+    .reduce((newObj, key) => {
+      newObj[key] = modifiedQuery[key];
+      return newObj;
+    }, {});
+  console.log(fields);
+  return {
+    relations,
+    where: validQuery,
+  };
+};

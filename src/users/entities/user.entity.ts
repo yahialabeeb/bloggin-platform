@@ -1,4 +1,5 @@
 import { Blog } from 'src/blogs/entities/blog.entity';
+import { Comment } from 'src/comments/entities/comment.entity';
 import {
   Column,
   Entity,
@@ -27,4 +28,8 @@ export class User {
   @OneToMany(() => Blog, (blog) => blog.author)
   @JoinColumn({ name: 'blog' })
   blogs: Blog[];
+
+  @OneToMany(() => Comment, (comment) => comment.author)
+  @JoinColumn({ name: 'blog' })
+  comments: Comment[];
 }

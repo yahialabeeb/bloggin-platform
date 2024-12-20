@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-const relations = ['blogs'];
+const relations = ['blogs', 'comments'];
 
 @Injectable()
 export class UsersService {
@@ -17,11 +17,14 @@ export class UsersService {
   ) {}
 
   findAll(query) {
-    return this.usersRepository.find(findRequest({ relations, query }));
-  }
-
-  count(query) {
-    return this.usersRepository.count(findRequest({ relations, query }));
+    console.log(findRequest({ relations, query }));
+    return this.usersRepository.find(
+      findRequest({
+        relations,
+        query,
+        fields: Object.keys(this.usersRepository.metadata.propertiesMap),
+      }),
+    );
   }
 
   async findOne(username: string) {
@@ -39,16 +42,18 @@ export class UsersService {
     });
   }
 
-  create(userDto: CreateUserDto) {
-    return this.usersRepository.save(userDto).then((res) => res);
+  async create(userDto: CreateUserDto) {
+    const res = await this.usersRepository.save(userDto);
+    return res;
   }
 
-  createMany(userDtos: CreateUserDto[]) {
+  async createMany(userDtos: CreateUserDto[]) {
     const batch = [];
     userDtos.forEach((userDto) => {
       batch.push(this.usersRepository.create(userDto));
     });
-    return this.usersRepository.save(batch).then((res) => res);
+    const res = await this.usersRepository.save(batch);
+    return res;
   }
 
   async update(id: string, userDto: UpdateUserDto) {

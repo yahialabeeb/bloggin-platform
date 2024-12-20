@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, Length } from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
+import { IsEnum, IsNotEmpty, IsUUID, Length } from 'class-validator';
 
 export class CreateBlogDto {
   @IsNotEmpty()
@@ -19,14 +18,16 @@ export class CreateBlogDto {
   content: string;
 
   @IsNotEmpty()
-  @Length(3, 20)
-  @ApiProperty()
-  author: User;
+  @IsEnum(['published', 'draft'])
+  @ApiProperty({ enum: ['published', 'draft'], enumName: 'status' })
+  status: string;
 
   @IsNotEmpty()
   @ApiProperty()
-  status: string;
-
-  @ApiProperty()
   thumbnail: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  @IsUUID()
+  authorId: string;
 }

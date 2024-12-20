@@ -3,6 +3,7 @@ export interface AccessTokenPayload {
   username: string;
   email: string;
 }
+
 interface AuthTokensConfig {
   email: string;
   accessToken: string;
