@@ -10,6 +10,13 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
       - DB_DATABASE=postgres
+      - JWT_SECRET=secret
+      - JWT_EXPIRES_IN=3600
+      - JWT_REFRESH_EXPIRES_IN=846000
+      - S3_URL=
+      - S3_BUCKET_NAME=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
     ports:
       - '8000:8000'
     volumes:

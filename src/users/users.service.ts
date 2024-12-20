@@ -1,26 +1,67 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NotFoundHandler } from '../utils/not-found-handler';
+import { findRequest } from '../utils/find-request';
 import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+
+const relations = ['blogs'];
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
+
+  findAll(query) {
+    return this.usersRepository.find(findRequest({ relations, query }));
   }
 
-  findAll() {
-    return `This action returns all users`;
+  count(query) {
+    return this.usersRepository.count(findRequest({ relations, query }));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(username: string) {
+    return await this.usersRepository.findOne({
+      where: { username },
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOneById(id: string) {
+    return NotFoundHandler({
+      action: 'find',
+      result: await this.usersRepository.findOne({
+        where: { id },
+      }),
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  create(userDto: CreateUserDto) {
+    return this.usersRepository.save(userDto).then((res) => res);
+  }
+
+  createMany(userDtos: CreateUserDto[]) {
+    const batch = [];
+    userDtos.forEach((userDto) => {
+      batch.push(this.usersRepository.create(userDto));
+    });
+    return this.usersRepository.save(batch).then((res) => res);
+  }
+
+  async update(id: string, userDto: UpdateUserDto) {
+    return NotFoundHandler({
+      action: 'update',
+      result: await this.usersRepository.update(id, userDto),
+    });
+  }
+
+  async remove(id: string) {
+    return NotFoundHandler({
+      action: 'delete',
+      result: await this.usersRepository.delete(id),
+    });
   }
 }
