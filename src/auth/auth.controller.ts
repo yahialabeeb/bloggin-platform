@@ -8,7 +8,6 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { plainToInstance } from 'class-transformer';
 import { JwtRefreshAuthGuard } from '../auth/guard/jwt-refresh.guard';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
@@ -23,10 +22,9 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('/signup')
   async signup(@Body() signUpDto: CreateUserDto) {
-    console.log(signUpDto);
     const user = await this.authService.signup(signUpDto);
     return {
-      data: plainToInstance(User, user),
+      data: user,
     };
   }
 
@@ -34,7 +32,7 @@ export class AuthController {
   async login(@Body() signinDto: SigninDto) {
     const user = await this.authService.login(signinDto);
     return {
-      data: plainToInstance(User, user),
+      data: user,
     };
   }
 

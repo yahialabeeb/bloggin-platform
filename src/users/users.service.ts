@@ -17,7 +17,6 @@ export class UsersService {
   ) {}
 
   findAll(query) {
-    console.log(findRequest({ relations, query }));
     return this.usersRepository.find(
       findRequest({
         relations,

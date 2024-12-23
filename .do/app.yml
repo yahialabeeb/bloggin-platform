@@ -1,0 +1,12 @@
+name: Blogging Platform
+services:
+  - name: web
+    source_dir: ./
+    github:
+      branch: main
+      deploy_on_push: true
+    docker_compose_path: ./docker-compose.yml
+    instance_size_slug: basic-xxs
+    instance_count: 1
+    routes:
+      - path: /

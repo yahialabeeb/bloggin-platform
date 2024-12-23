@@ -20,8 +20,8 @@ export class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: any) {
-    const user = await this.authService.validateUser(payload.sub);
-    return { ...user, refreshToken: payload };
+  async validate(data: any) {
+    const user = await this.authService.validateUser(data.sub);
+    return { ...user, refreshToken: data };
   }
 }

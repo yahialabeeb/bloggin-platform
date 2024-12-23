@@ -124,7 +124,6 @@ export const findRequest = ({
       newObj[key] = modifiedQuery[key];
       return newObj;
     }, {});
-  console.log(fields);
   return {
     relations,
     where: validQuery,

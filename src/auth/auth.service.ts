@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { hash, compare } from 'bcryptjs';
@@ -32,11 +32,13 @@ export class AuthService {
       sub: createdUser.id,
       username,
       email,
+      iss: 'blog.com',
     };
 
     const { accessToken, refreshToken } =
       await this._generateAuthTokens(payload);
     return {
+      id: createdUser.id,
       name,
       username,
       email,
@@ -51,11 +53,13 @@ export class AuthService {
       username,
       password,
     });
+    if (!user) return null;
     const { id, email, name } = user;
-    const payload = { sub: id, username, email };
+    const payload = { sub: id, username, email, iss: 'blog.com' };
     const { accessToken, refreshToken } =
       await this._generateAuthTokens(payload);
     return {
+      id,
       name,
       username,
       email,
@@ -70,6 +74,7 @@ export class AuthService {
       email: payload.email,
       username: payload.username,
       sub: payload.sub,
+      iss: 'blog.com',
     });
     return tokens;
   }

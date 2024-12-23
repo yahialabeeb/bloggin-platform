@@ -2,6 +2,7 @@ export interface AccessTokenPayload {
   sub: string;
   username: string;
   email: string;
+  iss: string;
 }
 
 interface AuthTokensConfig {
@@ -14,5 +15,5 @@ interface AuthTokensConfig {
 export interface AccountWithTokens extends AuthTokensConfig {
   username: string;
   name: string;
-  email: string;
+  id: string;
 }

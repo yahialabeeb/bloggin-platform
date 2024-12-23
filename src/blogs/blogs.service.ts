@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { NotFoundHandler } from '../utils/not-found-handler';
 import { findRequest } from '../utils/find-request';
 
-const relations = ['comments', 'author', 'likers'];
+const relations = ['comments', 'author'];
 
 @Injectable()
 export class BlogsService {

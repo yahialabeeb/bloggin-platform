@@ -13,7 +13,6 @@ export class CreateBlogDto {
   brief: string;
 
   @IsNotEmpty()
-  @Length(3, 20)
   @ApiProperty()
   content: string;
 

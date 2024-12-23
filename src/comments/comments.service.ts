@@ -7,7 +7,7 @@ import { NotFoundHandler } from '../utils/not-found-handler';
 import { findRequest } from '../utils/find-request';
 import { Comment } from './entities/comment.entity';
 
-const relations = ['blog', 'user'];
+const relations = ['blog', 'author'];
 
 @Injectable()
 export class CommentsService {

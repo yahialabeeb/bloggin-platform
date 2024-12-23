@@ -12,21 +12,19 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 
 @Controller('upload')
 @ApiTags('Upload')
-@UseGuards(JwtAuthGuard)
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file) {
-    console.log(file);
     const uploadedFile = await this.uploadService.uploadFile(
       file?.buffer,
       file?.originalname,
-      file.mimetype,
+      file?.mimetype,
     );
     return {
-      payload: uploadedFile,
+      data: uploadedFile,
     };
   }
 }

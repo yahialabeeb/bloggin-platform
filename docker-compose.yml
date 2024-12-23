@@ -1,22 +1,10 @@
-version: '3.5'
 services:
   app:
     container_name: blogging-platform-app
     build:
       context: .
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-      - DB_DATABASE=postgres
-      - JWT_SECRET=secret
-      - JWT_EXPIRES_IN=3600
-      - JWT_REFRESH_EXPIRES_IN=846000
-      - S3_URL=
-      - S3_BUCKET_NAME=
-      - AWS_ACCESS_KEY_ID=
-      - AWS_SECRET_ACCESS_KEY=
+      env_file: ".env"
     ports:
       - '8000:8000'
     volumes:
